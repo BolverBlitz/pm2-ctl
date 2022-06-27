@@ -1,0 +1,17 @@
+{
+  "name": "pm2-ctl",
+  "version": "0.0.1",
+  "description": "PM2 API Extention",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "PM2"
+  ],
+  "author": "BolverBlitz",
+  "license": "MIT",
+  "dependencies": {
+    "pm2": "^5.2.0"
+  }
+}
