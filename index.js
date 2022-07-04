@@ -82,11 +82,11 @@ const GetEveryStatusFromListByNames = function (proclist) {
 
 /**
  * This function will resolve with all informations about all prosesses in that list  
- * Works with Names  
+ * Works with IDs  
  * @param {Array} proclist
  * @returns {Array}
  */
- const GetEveryStatusFromListByIDs = function (proclist) {
+const GetEveryStatusFromListByIDs = function (proclist) {
     return new Promise(function (resolve, reject) {
         pm2.connect(function (err) {
             if (err) {
@@ -160,10 +160,10 @@ const GetMe = function () {
 }
 
 /**
- * This returns the prosess of itself if it runs in PM2
+ * This returns the cluster the process is part of
  * @returns {number}
  */
- const GetMyClusterIDs = function () {
+const GetMyClusterIDs = function () {
     return new Promise(function (resolve, reject) {
         pm2.connect(function (err) {
             if (err) {
@@ -175,11 +175,11 @@ const GetMe = function () {
                 if (err) {
                     reject(err);
                 }
+                let FilterdByPID = list.filter(function (el) { return el.pid == process.pid });
 
-                //console.log(list[0].pid, process.pid);
-                let Filterd = list.filter(function (el) { return el.pid == process.pid });
-                if (Filterd.length > 0) {
-                    resolve(Filterd[0].pm_id);
+                if (FilterdByPID.length > 0) {
+                    let FilterdByName = list.filter(function (el) { return el.name == FilterdByPID[0].name });
+                    resolve(FilterdByName);
                 } else {
                     reject(`Not running as PM2 Process. PID is: ${process.pid}`);
                 }
@@ -314,6 +314,9 @@ module.exports = {
     GetStatus,
     GetMe,
     Delete,
+    GetMyCluster: {
+        ID: GetMyClusterIDs
+    },
     GetEvery: {
         Status: GetEveryStatus,
         FromListByIDs: GetEveryStatusFromListByIDs,
