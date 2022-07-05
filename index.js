@@ -163,7 +163,7 @@ const GetMe = function () {
  * This returns the cluster the process is part of
  * @returns {number}
  */
-const GetMyClusterIDs = function () {
+const GetMyCluster = function () {
     return new Promise(function (resolve, reject) {
         pm2.connect(function (err) {
             if (err) {
@@ -314,9 +314,7 @@ module.exports = {
     GetStatus,
     GetMe,
     Delete,
-    GetMyCluster: {
-        ID: GetMyClusterIDs
-    },
+    GetMyCluster: GetMyCluster,
     GetEvery: {
         Status: GetEveryStatus,
         FromListByIDs: GetEveryStatusFromListByIDs,
