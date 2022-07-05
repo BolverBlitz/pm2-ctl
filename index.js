@@ -1,7 +1,7 @@
 const pm2 = require('pm2')
 
 /**
- * This function will resolve the PM2_IDs of the names
+ * This function will resolve the PM2_IDs of the listed names
  * @param {Array} NameList
  * @returns {Array}
  */
@@ -160,8 +160,8 @@ const GetMe = function () {
 }
 
 /**
- * This returns the cluster the process is part of
- * @returns {number}
+ * This returns the cluster the process is part of if it runs in PM2
+ * @returns {Array}
  */
 const GetMyCluster = function () {
     return new Promise(function (resolve, reject) {
@@ -313,7 +313,6 @@ module.exports = {
     GetPM2IDByName,
     GetStatus,
     GetMe,
-    Delete,
     GetMyCluster: GetMyCluster,
     GetEvery: {
         Status: GetEveryStatus,
@@ -324,6 +323,7 @@ module.exports = {
         Start,
         Stop,
         Restart,
-        Reload
+        Reload,
+        Delete
     }
 };
