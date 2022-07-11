@@ -23,6 +23,12 @@ const DissconnectPm2 = function () {
     isConnected = false;
 }
 
+/**
+ * Send a object to a process by its ID
+ * @param {String | Number} proc
+ * @param {Object} data
+ * @returns {Void}
+ */
 const SendToProcessPromise = (proc, data) => {
     return new Promise((resolve, reject) => {
         pm2.sendDataToProcessId(proc.pm_id, { type: 'process:msg', topic: true, data: data }, function (err) {
@@ -39,7 +45,7 @@ const SendToProcessPromise = (proc, data) => {
  */
 const GetPM2IDByName = function (NameList) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -62,7 +68,7 @@ const GetPM2IDByName = function (NameList) {
  */
 const GetStatus = function (proc) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.describe(proc, (err, process_data) => {
             if (err) {
                 reject(err);
@@ -80,7 +86,7 @@ const GetStatus = function (proc) {
  */
 const GetEveryStatusFromListByNames = function (proclist) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -99,7 +105,7 @@ const GetEveryStatusFromListByNames = function (proclist) {
  */
 const GetEveryStatusFromListByIDs = function (proclist) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -117,7 +123,7 @@ const GetEveryStatusFromListByIDs = function (proclist) {
  */
 const GetEveryStatus = function () {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -133,7 +139,7 @@ const GetEveryStatus = function () {
  */
 const GetMe = function () {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -156,7 +162,7 @@ const GetMe = function () {
  */
 const GetMyCluster = function () {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -174,12 +180,13 @@ const GetMyCluster = function () {
 };
 
 /**
+ * Send a object to all processes that are in the same cluster as the process that send the object
  * @param {Object} data
  * @returns {Array}
  */
 const SendEventToMyCluster = function (data) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.list((err, list) => {
             if (err) {
                 reject(err);
@@ -203,13 +210,39 @@ const SendEventToMyCluster = function (data) {
 };
 
 /**
+ * Send a object to a process by its ID or Name
+ * @param {String | Number} proc
+ * @param {Object} data
+ * @returns {Array}
+ */
+const SendEventToProcess = function (proc, data) {
+    return new Promise(function (resolve, reject) {
+        if (!isConnected) { reject('PM2 is not connected') }
+        pm2.describe(proc, (err, process_data) => {
+            if (err) {
+                reject(err);
+            }
+            let work = [];
+            process_data.map(function (proc) {
+                work.push(SendToProcessPromise(proc, data));
+            });
+            Promise.all(work).then(function () {
+                resolve(true);
+            }).catch(function (err) {
+                reject(err);
+            });
+        });
+    });
+};
+
+/**
  * Starts a process, based on js config files
  * @param {String} config  
  * @returns {object} process_data
  */
 const Start = function (proc) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.start(proc, (err, process_data) => {
             if (err) {
                 reject(err);
@@ -226,7 +259,7 @@ const Start = function (proc) {
  */
 const Stop = function (proc) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.stop(proc, (err, process_data) => {
             if (err) {
                 reject(err);
@@ -243,7 +276,7 @@ const Stop = function (proc) {
  */
 const Restart = function (proc) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.restart(proc, (err, process_data) => {
             if (err) {
                 reject(err);
@@ -260,7 +293,7 @@ const Restart = function (proc) {
  */
 const Reload = function (proc) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.reload(proc, (err, process_data) => {
             if (err) {
                 reject(err);
@@ -278,7 +311,7 @@ const Reload = function (proc) {
  */
 const Delete = function (proc) {
     return new Promise(function (resolve, reject) {
-        if(!isConnected){reject('PM2 is not connected')}
+        if (!isConnected) { reject('PM2 is not connected') }
         pm2.delete(proc, (err, process_data) => {
             if (err) {
                 reject(err);
@@ -297,7 +330,8 @@ module.exports = {
     GetMe,
     GetMyCluster: GetMyCluster,
     SendEvent: {
-        ToMyCluster: SendEventToMyCluster
+        ToMyCluster: SendEventToMyCluster,
+        ToProcess: SendEventToProcess
     },
     GetEvery: {
         Status: GetEveryStatus,
