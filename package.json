@@ -1,6 +1,6 @@
 {
   "name": "pm2-ctl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "PM2 API Extention",
   "main": "index.js",
   "scripts": {
